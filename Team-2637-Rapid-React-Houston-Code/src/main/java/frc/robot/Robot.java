@@ -203,8 +203,8 @@ public class Robot extends TimedRobot
 
       isClimbing = inClimbMode;
 
-      reverseSwitchHit = turret.magLimitSwitchRight.isPressed();
-      forwardSwitchHit = turret.magLimitSwitchLeft.isPressed();
+      //reverseSwitchHit = turret.magLimitSwitchRight.isPressed();
+      //forwardSwitchHit = turret.magLimitSwitchLeft.isPressed();
 
       if(isClimbing == true)
       {

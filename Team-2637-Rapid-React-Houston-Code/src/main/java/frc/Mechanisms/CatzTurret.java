@@ -40,6 +40,9 @@ public class CatzTurret
     private final double MIN_POSITION  = -100.0;
     private final double HOME_POSITION = 0.0;
 
+    private final double TURRET_POSITIVE_MAX_RANGE =  155.0;
+    private final double TURRET_NEGATIVE_MAX_RANGE = -155.0;
+
     private final int TURRET_GEARBOX_VERSA_1          = 5;
     private final int TURRET_GEARBOX_VERSA_2          = 4;
     private final int TURRET_GEARBOX_TURRET_GEAR      = 140 / 10;
@@ -59,6 +62,7 @@ public class CatzTurret
     private double targetPos            = 45.0; 
     private double targetMtrPwr         = 0.0;
 
+
     private boolean TURN_POSITIVE = true;
     private boolean TURN_NEGATIVE = false;
     private boolean direction     = TURN_POSITIVE;
@@ -72,8 +76,8 @@ public class CatzTurret
     private final boolean STOP_ON_LS_HIT      =  true;
 
     private DigitalInput        limitSwitchHome;
-    public SparkMaxLimitSwitch magLimitSwitchLeft;
-    public SparkMaxLimitSwitch magLimitSwitchRight;
+    //public SparkMaxLimitSwitch magLimitSwitchLeft;
+    //public SparkMaxLimitSwitch magLimitSwitchRight;
 
     private final int HOME_LIMIT_SWITCH_DIO_PORT = 0;
 
@@ -116,14 +120,14 @@ public class CatzTurret
 
         limitSwitchHome       = new DigitalInput(HOME_LIMIT_SWITCH_DIO_PORT);
 
-        magLimitSwitchLeft    = turretMC.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-        magLimitSwitchRight   = turretMC.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        //magLimitSwitchLeft    = turretMC.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+        //magLimitSwitchRight   = turretMC.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
 
        /* magLimitSwitchLeft.enableLimitSwitch(STOP_ON_LS_HIT);
         magLimitSwitchRight.enableLimitSwitch(STOP_ON_LS_HIT);*/
 
-        magLimitSwitchLeft.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
-        magLimitSwitchRight.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
+        //magLimitSwitchLeft.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
+        //magLimitSwitchRight.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
 
         turretEncoder = turretMC.getEncoder();
         turretEncoder.setPositionConversionFactor(360.0 / TURRET_GEAR_REDUCTION);
@@ -159,7 +163,7 @@ public class CatzTurret
                 currentTime = turrettimer.get();
 
                 currentPos = getTurretPositionDeg();
-                if(currentPos > 90.0)
+                /*if(currentPos > 90.0)
                 {
                     magLimitSwitchLeft.enableLimitSwitch(STOP_ON_LS_HIT);
                 }
@@ -171,7 +175,7 @@ public class CatzTurret
                 {
                     magLimitSwitchLeft.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
                     magLimitSwitchRight.enableLimitSwitch(DONT_STOP_ON_LS_HIT);
-                }
+                }*/
 
                 switch(turretState)
                 {
@@ -457,9 +461,31 @@ public class CatzTurret
     *
     *---------------------------------------------------------------------------------------------*/
     public void rotateTurret(double mtrPwr)
-    {
+    {   
+
         turretMtrPwr = mtrPwr;
+
+        if((getTurretPositionDeg() >= TURRET_POSITIVE_MAX_RANGE) && (turretMtrPwr > 0.0))
+        {
+            turretMtrPwr = 0.0;
+            Robot.forwardSwitchHit = true;
+        }
+        else
+        {
+            Robot.forwardSwitchHit = false;
+        }
+
+        if((getTurretPositionDeg() <= TURRET_NEGATIVE_MAX_RANGE) && (turretMtrPwr < 0.0))
+        {
+            turretMtrPwr = 0.0;
+            Robot.reverseSwitchHit = true;
+        }
+        else
+        {
+            Robot.reverseSwitchHit = false;
+        }
         turretMC.set(turretMtrPwr);
+        
     }
 
 
