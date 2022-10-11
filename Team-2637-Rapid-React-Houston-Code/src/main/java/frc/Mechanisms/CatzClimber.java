@@ -250,7 +250,7 @@ public class CatzClimber
 
                 //checkOuterArmPos();
 
-                if(climbDataCollectionOn == true)
+                if(DataCollection.getLogDataID() == DataCollection.LOG_ID_CLIMB)
                 {
                     if(Robot.xboxAux.getRightBumper())
                     {

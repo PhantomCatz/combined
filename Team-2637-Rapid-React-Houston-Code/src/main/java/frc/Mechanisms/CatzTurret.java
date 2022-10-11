@@ -62,7 +62,6 @@ public class CatzTurret
     private double targetPos            = 45.0; 
     private double targetMtrPwr         = 0.0;
 
-
     private boolean TURN_POSITIVE = true;
     private boolean TURN_NEGATIVE = false;
     private boolean direction     = TURN_POSITIVE;
@@ -288,7 +287,7 @@ public class CatzTurret
                         turretTrackingStatePrev = turretTrackingState;*/
                         
 
-                        if (turretDataCollectionOn == true)
+                        if (DataCollection.getLogDataID() == DataCollection.LOG_ID_TURRET)
                         {
                             /*if (uniqueFirstLogData == false)
                             {
@@ -310,7 +309,7 @@ public class CatzTurret
                                                                                                             Robot.vision.getXErrorOffset(),
                                                                                                             Robot.vision.getYErrorOffset(),
                                                                                                             Robot.vision.getDistanceToTarget(), 
-                                                                                                            -999.0, -999.0, -999.0);   //set to 16 values
+                                                                                                            -999.0, -999.0, -999);   //set to 16 values
                             Robot.dataCollection.logData.add(data);
                         }
 
@@ -461,8 +460,7 @@ public class CatzTurret
     *
     *---------------------------------------------------------------------------------------------*/
     public void rotateTurret(double mtrPwr)
-    {   
-
+    {
         turretMtrPwr = mtrPwr;
 
         if((getTurretPositionDeg() >= TURRET_POSITIVE_MAX_RANGE) && (turretMtrPwr > 0.0))
@@ -485,7 +483,6 @@ public class CatzTurret
             Robot.reverseSwitchHit = false;
         }
         turretMC.set(turretMtrPwr);
-        
     }
 
 

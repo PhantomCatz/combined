@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.smartdashboard.*;
 
 import frc.DataLogger.CatzLog;
+import frc.DataLogger.DataCollection;
 import frc.robot.Robot;
 
 
@@ -406,7 +407,7 @@ public class CatzShooter
                 /*---------------------------------------------------------------------------------
                 *  Data Collection
                 *--------------------------------------------------------------------------------*/
-                if(shooterDataCollectionOn == true)
+                if(DataCollection.getLogDataID() == DataCollection.LOG_ID_SHOOTER)
                 {
                     if(shooterTraceID > 0 && shooterState != SHOOTER_STATE_OFF)
                     {
@@ -415,7 +416,7 @@ public class CatzShooter
                             data = new CatzLog(PID_F_TOP, PID_P_TOP, PID_F_BTM, PID_P_BTM, Top_MaxRPM, Top_MinRPM, SHOOTER_RPM_PID_OFFSET_TOP,
                                                                                         Btm_MaxRPM, Btm_MinRPM, SHOOTER_RPM_PID_OFFSET_BTM,
                                                                                         SHOOTER_RPM_BACKSPIN_OFFSET,
-                                                                                        -999.0, -999.0, -999.0, -999.0, -999.0);
+                                                                                        -999.0, -999.0, -999.0, -999.0, -999);
                             configDataPrinted = true;
                         }
                         else
@@ -429,7 +430,7 @@ public class CatzShooter
                                                                                 shtrMCBtm.getMotorOutputPercent(),
                                                                                 shtrMCBtm.getMotorOutputVoltage(), 
                                                                                 shtrMCBtm.getSupplyCurrent(),
-                                            shooterRPMSteadyCounter, -999.0);
+                                            shooterRPMSteadyCounter, -999);
                         }
                         
 

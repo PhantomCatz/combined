@@ -2,7 +2,7 @@ package frc.Autonomous;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import frc.DataLogger.DataCollection;
 import frc.DataLogger.CatzLog;
 import frc.robot.*;
 
@@ -240,7 +240,7 @@ public class CatzAutonomous
                             Robot.driveTrain.currentEncCountsToInches,
                             Robot.driveTrain.currentDrvTrainGear,
                             Robot.pdp.getVoltage(),
-                            -999.0, -999.0, -999.0, -999.0);
+                            -999.0, -999.0, -999.0, -999);
 
         Robot.dataCollection.logData.add(data);
 
@@ -371,7 +371,7 @@ public class CatzAutonomous
                 } 
             } // end:if (distanceRemaining < STOP_THRESHOLD_DIST)
 
-            if (autonLogData == true)
+            if (DataCollection.logDataID == DataCollection.LOG_ID_DRV_STRAIGHT)
             {
                 data = new CatzLog(currentTime, velocityCntsPer100ms, currentVelocityRt,
                                     Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getClosedLoopError(0),
@@ -383,7 +383,7 @@ public class CatzAutonomous
                                     currentEncCountLt, 
                                     distanceRemaining,
                                     Robot.navx.getAngle(),
-                                    -999.0, -999.0,-999.0,-999.0);     
+                                    -999.0, -999.0,-999.0,-999);     
                                     
                 Robot.dataCollection.logData.add(data);
             }
@@ -447,7 +447,7 @@ public class CatzAutonomous
                             Robot.driveTrain.currentEncCountsToInches,
                             Robot.driveTrain.currentDrvTrainGear,
                             Robot.pdp.getVoltage(),
-                            -999.0, -999.0, -999.0, -999.0, -999.0, -999.0);
+                            -999.0, -999.0, -999.0, -999.0, -999.0, -999);
         Robot.dataCollection.logData.add(data);
         
         /*----------------------------------------------------------------------
@@ -508,7 +508,7 @@ public class CatzAutonomous
                                 currentEncCountLt, 
                                 Robot.navx.getAngle(), 
                                 targetVelocityCntsPer100ms,
-                                -999.0, -999.0,-999.0, -999.0);
+                                -999.0, -999.0,-999.0, -999);
             
             Robot.dataCollection.logData.add(data);
 
