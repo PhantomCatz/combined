@@ -25,14 +25,7 @@ public class CatzYdexer
     // Data Collection
     private CatzLog data;
 
-    
-
     private int traceID = 0;
-
-    private double yDexerOnDouble       = 0.0;
-    private double btmSensorStateDouble = 0.0;
-    private double topSensorStateDouble = 0.0;
-    private double cargoInRangeDouble   = 0.0;
 
     // Sensor variables
    
@@ -279,20 +272,23 @@ public class CatzYdexer
                     }
                 }
 
-                if(dataCollectionYdexerON == true)
+                if(DataCollection.getLogDataID() == DataCollection.LOG_ID_YDEXER)
                 {
-                    booleanDataLogging();
-
-                    data = new CatzLog(Robot.dataCollectionTimer.get(), (double)traceID, btmSensorStateDouble,
-                                                                                        topSensorStateDouble,
-                                                                                        yDexerOnDouble,
-                                                                                        cargoInRangeDouble,
-                                                                                        (double)yDexerCount,
+                    DataCollection.resetBooleanData();
+                    DataCollection.booleanDataLogging(btmSensorState, 0);
+                    DataCollection.booleanDataLogging(topSensorState, 1);
+                    DataCollection.booleanDataLogging(yDexerOn,       2);
+                    DataCollection.booleanDataLogging(cargoInRange,   3);
+                    
+                    data = new CatzLog(Robot.dataCollectionTimer.get(), (double)traceID, (double)yDexerCount,
                                                                                         yDexerMtrCtrl.getAppliedOutput(),
                                                                                         -999.0, -999.0, -999.0, -999.0,
-                                                                                        -999.0, -999.0, -999.0, -999.0);       
-                                                                                
+                                                                                        -999.0, -999.0, -999.0, -999.0,
+                                                                                        -999.0, -999.0, -999.0,
+                                                                                        DataCollection.boolData);
+                    
                     Robot.dataCollection.logData.add(data);
+
                 }
             
                Timer.delay(YDEXER_THREAD_DELAY); 
@@ -345,9 +341,6 @@ public class CatzYdexer
         }
     }
 
-
-
-   
     
 
     /*--------------------------------------------------------------------------------
@@ -368,45 +361,4 @@ public class CatzYdexer
         SmartDashboard.putBoolean("ShooterOn", shooterOn);
         SmartDashboard.putBoolean("Ydexer",    yDexerOn);
     }
-
-
-    private void booleanDataLogging()
-    {
-        if(yDexerOn == true)
-        {
-            yDexerOnDouble = 1.0;
-        }
-        else
-        {
-            yDexerOnDouble = 0.0;
-        }
-
-        if(btmSensorState == BTM_BALL_PRESENT)
-        {
-            btmSensorStateDouble = 1.0;
-        }
-        else
-        {
-            btmSensorStateDouble = 0.0;
-        }
-
-        if(topSensorState == TOP_BALL_PRESENT)
-        {
-            topSensorStateDouble = 1.0;
-        }
-        else
-        {
-            topSensorStateDouble = 0.0;
-        }
-
-        if(cargoInRange == true)
-        {
-            cargoInRangeDouble = 1.0;
-        }
-        else
-        {
-            cargoInRangeDouble = 0.0;
-        }
-    }
-
 }

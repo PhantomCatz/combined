@@ -3,7 +3,8 @@ package frc.DataLogger;
 import java.util.ArrayList;
 
 import edu.wpi.first.wpilibj.Timer;
-
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Robot;
 //import frc.Autonomous.CatzAutonomous;
 
@@ -39,17 +40,18 @@ public class DataCollection
 
     private final double LOG_SAMPLE_RATE = 0.1;
 
-    public final int LOG_ID_DRV_TRAIN          = 1;
-    public final int LOG_ID_DRV_STRAIGHT_PID   = 2;
-    public final int LOG_ID_DRV_DISTANCE_PID   = 3;
-    public final int LOG_ID_DRV_TURN_PID       = 4;
-    public final int LOG_ID_SHOOTER            = 5;
-    public final int LOG_ID_DRV_STRAIGHT       = 6;
-    public final int LOG_ID_DRV_TURN           = 7;
-    public final int LOG_ID_CLIMB              = 8;
-    public final int LOG_ID_TURRET             = 9;
-    public final int LOG_ID_LIDAR              = 10;
-    public final int LOG_ID_YDEXER             = 11;
+    public static final int LOG_ID_NONE               = 0;
+    public static final int LOG_ID_DRV_TRAIN          = 1;
+    public static final int LOG_ID_DRV_STRAIGHT_PID   = 2;
+    public static final int LOG_ID_DRV_DISTANCE_PID   = 3;
+    public static final int LOG_ID_DRV_TURN_PID       = 4;
+    public static final int LOG_ID_SHOOTER            = 5;
+    public static final int LOG_ID_DRV_STRAIGHT       = 6;
+    public static final int LOG_ID_DRV_TURN           = 7;
+    public static final int LOG_ID_CLIMB              = 8;
+    public static final int LOG_ID_TURRET             = 9;
+    public static final int LOG_ID_LIDAR              = 10;
+    public static final int LOG_ID_YDEXER             = 11;
 
     public boolean validLogID = true;
 
@@ -64,13 +66,40 @@ public class DataCollection
     private final String LOG_HDR_CLIMB    = "cur-time, tar-pos, cur-pos, ra-enc";
     private final String LOG_HDR_TURRET    = "cur-time, trace-id, tar-pos, cur-pos, angl-err, mtr-pwr, app-outp, outp-curr, bus-vlt, enc-vel, vs-x-err, vs-y-err, vs-dist";
     private final String LOG_HDR_LIDAR    = "cur-time, trace-ID, minRange, range, maxRange, inRangeCounter, inRangeDouble, waitNextMeasure";
-    private final String LOG_HDR_YDEXER    = "cur-time, trace-ID, btmState, topState, yDexOn, inRange, yDexCnt, appOut";
+    private final String LOG_HDR_YDEXER    = "cur-time, trace-ID, yDexCnt, appOut, , , , , , , , , , , , btmState, topState, yDexOn, inRange";
     public String logStr;
+
+    public static final SendableChooser<Integer> chosenDataID = new SendableChooser<>();
+
+    public static int boolData = 0;
+
+    public static final int shift0 = 1 << 0;
+    public static final int shift1 = 1 << 1;
+    public static final int shift2 = 1 << 2;
+    public static final int shift3 = 1 << 3;
+    public static final int shift4 = 1 << 4;
+    public static final int shift5 = 1 << 5;
+    public static final int shift6 = 1 << 6;
+    public static final int shift7 = 1 << 7;
+
+
+    public void updateLogDataID()
+    {
+        if(chosenDataID.getSelected() == LOG_ID_NONE)
+        {
+            stopDataCollection();
+        }
+        else
+        {
+            startDataCollection();
+        }
+        setLogDataID(chosenDataID.getSelected());
+
+    }
 
     public void setLogDataID(final int dataID)
     {
         logDataID = dataID;
-    
     }
 
     
@@ -82,6 +111,8 @@ public class DataCollection
 
         logData = list;
 
+        dataCollectionShuffleboard();
+
         dataThread = new Thread( () ->
         {
             while(!Thread.interrupted())
@@ -92,7 +123,7 @@ public class DataCollection
                 } 
                 else if (logDataValues == false) 
                 {
-                 
+
                 } 
 
                 Timer.delay(LOG_SAMPLE_RATE);
@@ -102,6 +133,27 @@ public class DataCollection
         } );
 
         dataThread.start();
+    }
+
+    /*-----------------------------------------------------------------------------------------
+    *  Initialize drop down menu for data collection on Shuffleboard
+    *----------------------------------------------------------------------------------------*/
+    public void dataCollectionShuffleboard()
+    {
+        chosenDataID.setDefaultOption("None",        LOG_ID_NONE);
+        chosenDataID.addOption("Drive Train",        LOG_ID_DRV_TRAIN);
+        chosenDataID.addOption("Drive Straight PID", LOG_ID_DRV_STRAIGHT_PID);
+        chosenDataID.addOption("Drive Distance PID", LOG_ID_DRV_DISTANCE_PID);
+        chosenDataID.addOption("Drive Turn PID",     LOG_ID_DRV_TURN_PID);
+        chosenDataID.addOption("Drive Straight",     LOG_ID_DRV_STRAIGHT);
+        chosenDataID.addOption("Drive Turn",         LOG_ID_DRV_TURN);
+        chosenDataID.addOption("Ydexer",             LOG_ID_YDEXER);
+        chosenDataID.addOption("Lidar",              LOG_ID_LIDAR);
+        chosenDataID.addOption("Turret",             LOG_ID_TURRET);
+        chosenDataID.addOption("Shooter",            LOG_ID_SHOOTER);
+        chosenDataID.addOption("Climb",              LOG_ID_CLIMB);
+
+        SmartDashboard.putData("Data Collection", chosenDataID);
     }
 
     public void startDataCollection() 
@@ -131,10 +183,10 @@ public class DataCollection
         double data12 = -999.0;
         double data13 = -999.0;
         double data14 = -999.0;
-        double data15 = -999.0;
+        int data15    = -999;
         //double data16 = -999.0;
 
-        
+
         //define each data
         switch (dataID) 
         {
@@ -152,9 +204,9 @@ public class DataCollection
                 data9 = Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getMotorOutputPercent();
 
                 data10 = Robot.driveTrain.drvTrainMtrCtrlLTFrnt.getStatorCurrent();
-                data11 = Robot.driveTrain.drvTrainMtrCtrlLTBack.getStatorCurrent();
-                data12 = Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getStatorCurrent();
-                data13 = Robot.driveTrain.drvTrainMtrCtrlRTBack.getStatorCurrent();
+                //data11 = Robot.driveTrain.drvTrainMtrCtrlLTBack.getStatorCurrent();
+                data11 = Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getStatorCurrent();
+                //data13 = Robot.driveTrain.drvTrainMtrCtrlRTBack.getStatorCurrent();
 
                 //data10 = Robot.driveTrain.getIntegratedEncPosition("LT");
                 //data11 = Robot.driveTrain.getIntegratedEncPosition("RT");
@@ -162,8 +214,8 @@ public class DataCollection
                 //data12 = Robot.driveTrain.getSrxMagPosition("LT");
                 //data13 = Robot.driveTrain.getSrxMagPosition("RT");
 
-                data14 = Robot.driveTrain.drvTrainMtrCtrlLTFrnt.getSupplyCurrent();
-                data15 = Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getSupplyCurrent();
+                data12 = Robot.driveTrain.drvTrainMtrCtrlLTFrnt.getSupplyCurrent();
+                data13 = Robot.driveTrain.drvTrainMtrCtrlRTFrnt.getSupplyCurrent();
 
                 data = new CatzLog(Robot.dataCollectionTimer.get(), data1, data2, data3, data4, data5, data6, data7, data8, data9, data10, data11, data12, data13, data14, data15);
                 logData.add(data);
@@ -183,6 +235,19 @@ public class DataCollection
             default :
                 validLogID = false;
 
+        }
+    }
+
+    public static void resetBooleanData()
+    {
+        boolData = 0;
+    }
+
+    public static void booleanDataLogging(boolean bool1, int bitPos)
+    {
+        if(bool1 == true)
+        {
+            boolData |= (1 << bitPos);
         }
     }
     
@@ -261,5 +326,10 @@ public class DataCollection
 
             pw.close();
         }
+    }
+
+    public static int getLogDataID()
+    {
+        return logDataID;
     }
 }

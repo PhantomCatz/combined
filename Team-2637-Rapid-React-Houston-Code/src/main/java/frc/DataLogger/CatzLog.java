@@ -17,8 +17,7 @@ public class CatzLog
     public double robotData12;
     public double robotData13;
     public double robotData14;
-    public double robotData15;
-  
+    public int robotData15;
     
     public int robotDataType;
 
@@ -26,7 +25,7 @@ public class CatzLog
     public CatzLog(double time, 
                    double data1, double data2, double data3, double data4, double data5, 
                    double data6, double data7, double data8, double data9, double data10, 
-                   double data11, double data12, double data13, double data14, double data15)
+                   double data11, double data12, double data13, double data14, int data15)
     {
         robotTime  = time;
         robotData1 = data1;
@@ -45,18 +44,17 @@ public class CatzLog
         robotData14 = data14;
         robotData15 = data15;
     }
-
   
 
     public String toString()
     {
+    
         return robotTime +", " + robotData1 + ", " + robotData2 + ", " + robotData3 + ", " + robotData4 + ", " + robotData5 + ", " 
-                               + robotData6 + ", " + robotData7 + ", " + robotData8 + ", " + robotData9 + ", " + robotData10 + ","
-                               + robotData11 + "," + robotData12 + ", " + robotData13+","  + robotData14+  "," + robotData15;
+                            + robotData6 + ", " + robotData7 + ", " + robotData8 + ", " + robotData9 + ", " + robotData10 + ","
+                            + robotData11 + "," + robotData12 + ", " + robotData13+","  + robotData14+  ","
+                            + ((robotData15 & DataCollection.shift0))      +  "," + ((robotData15 & DataCollection.shift1) >> 1) +  ","
+                            + ((robotData15 & DataCollection.shift2) >> 2) +  "," + ((robotData15 & DataCollection.shift3) >> 3) +  ","
+                            + ((robotData15 & DataCollection.shift0) >> 4) +  "," + ((robotData15 & DataCollection.shift1) >> 5) +  ","
+                            + ((robotData15 & DataCollection.shift2) >> 6) +  "," + ((robotData15 & DataCollection.shift3) >> 7);
     }
-
-
-    
-
-    
 }

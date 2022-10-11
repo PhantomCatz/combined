@@ -101,7 +101,7 @@ public class LiDAR
                                                                                           waitForNextMeasurementDouble,
                                                                                           -999.0, -999.0, -999.0, -999.0,
                                                                                           -999.0, -999.0, -999.0, -999.0,
-                                                                                          -999.0);                      
+                                                                                          -999);                      
                     Robot.dataCollection.logData.add(data);
                 }
                 

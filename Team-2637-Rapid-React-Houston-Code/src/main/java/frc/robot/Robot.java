@@ -109,7 +109,6 @@ public class Robot extends TimedRobot
   public static boolean inClimbMode = false;
   public static boolean reverseSwitchHit;
   public static boolean forwardSwitchHit;
-  
   double distance = 0.0;
 
   boolean firstDeployRoatatingArm = true;
@@ -181,6 +180,7 @@ public class Robot extends TimedRobot
   @Override
   public void robotPeriodic() 
   {
+    dataCollection.updateLogDataID();
 
     lidar.smartDashboardLiDAR();
     shooter.smartDashboardShooter();
@@ -189,9 +189,11 @@ public class Robot extends TimedRobot
     climb.smartDashboardClimb();
     vision.smartDashboardVision();
     shooter.getServoPosition();
-    turret.smartDashboardTurret_DEBUG();
+    
     SmartDashboard.putNumber("Time", Timer.getMatchTime());
+
     //shooter.smartDashboardShooter_DEBUG();
+    //climb.smartDashboardClimb_DEBUG();
 
     
     if(!(isDisabled()))
@@ -282,6 +284,7 @@ public class Robot extends TimedRobot
   @Override
   public void teleopInit() 
   {
+    //turret.resetTurretEncoder();
 
     shooter.inAutonomous = false;
       
@@ -489,7 +492,7 @@ public class Robot extends TimedRobot
     *-------------------------------------------------------------------------------*/
     if(xboxAux.getRightBumper())
     {
-
+      
       /*----------------------------------------------------------------------------------------------
       *  In Climb mode
       *---------------------------------------------------------------------------------------------*/
@@ -561,8 +564,7 @@ public class Robot extends TimedRobot
         else
         {
           xboxDrv.setRumble(RumbleType.kRightRumble, 1.0);
-          xboxAux.setRumble(RumbleType.kRightRumble, 1.0);
-          
+          xboxAux.setRumble(RumbleType.kRightRumble, 1.0); 
         }
        
       }
