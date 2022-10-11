@@ -2,6 +2,10 @@ package frc.Mechanisms;
 
 import edu.wpi.first.networktables.*;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.UsbCamera;
+import edu.wpi.first.cscore.VideoSink;
+import edu.wpi.first.cscore.VideoMode.PixelFormat;
 
 public class CatzVision 
 {
@@ -22,10 +26,12 @@ public class CatzVision
     private double angleToTargetRad;
     private double distanceToTargetInch;
 
+    private UsbCamera drvcam;
+    private VideoSink drvcamserver;
+
     public CatzVision()
     {
-        NetworkTableInstance.getDefault().getTable("limelight-drvcam").getEntry("camMode").setNumber(1.0);
-        NetworkTableInstance.getDefault().getTable("limelight-drvcam").getEntry("ledMode").setNumber(1.0);
+
     }
 
     public void turretTracking()
@@ -81,5 +87,14 @@ public class CatzVision
     public boolean hasValidTarget()
     {
         return hasValidTarget;
+    }
+
+    public void setupCamera()
+    {
+        drvcam = CameraServer.startAutomaticCapture("drvcam",0);
+        drvcam.setVideoMode(PixelFormat.kMJPEG, 640, 480, 10);
+        
+        drvcamserver = CameraServer.getServer();
+        drvcamserver.setSource(drvcam);
     }
 }
